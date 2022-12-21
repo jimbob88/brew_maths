@@ -10,6 +10,12 @@ def total_mass(grists: List[GristRecipe]) -> float:
     )
 
 
+def total_mass_of_mashables(grists: List[GristRecipe]):
+    return sum(
+        grist.mass for grist in grists if grist.mashable
+    )
+
+
 def percentage_by_mass(grist: GristRecipe, grists: List[GristRecipe]) -> float:
     """Gets the percentage by mass of a grist
 

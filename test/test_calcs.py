@@ -1,5 +1,6 @@
 import unittest
 
+from calc.mash_liquor import mash_liquor
 from calc.util import total_mass, percentage_by_mass
 from calc.ebc import graham_recipe_ebc
 from calc.original_gravity import original_gravity, individual_gravity
@@ -30,6 +31,8 @@ class TestMisc(unittest.TestCase):
         self.assertEqual(total_mass(grists), 400)
         self.assertEqual(percentage_by_mass(grists[0], grists), 0.25)
 
+
+class TestOriginalGravity(unittest.TestCase):
     def test_original_gravity_withMashableMalt(self):
         grists = [
             GristRecipe(ebc=60,
@@ -143,6 +146,8 @@ class TestMisc(unittest.TestCase):
         grav = individual_gravity(sugar, 10, 0.75)
         self.assertEqual(round(grav, 1), 3.7)
 
+
+class TestEBC(unittest.TestCase):
     def test_graham_recipe_ebc_withMixedMashability(self):
         grists = [
             GristRecipe(ebc=60,
@@ -162,6 +167,40 @@ class TestMisc(unittest.TestCase):
         ]
         ebc = graham_recipe_ebc(grists, 10, 0.75)
         self.assertEqual(round(ebc, 1), 9.5)
+
+
+class TestMashLiqour(unittest.TestCase):
+    def test_mash_liquor_withMixedMashability(self):
+        grists = [
+            GristRecipe(ebc=60,
+                        mashable=True,
+                        extract=265,
+                        moisture=3,
+                        fermentability=200,
+                        metadata=GristMetadata(name='Amber Malt'),
+                        mass=100),
+            GristRecipe(ebc=50,
+                        mashable=False,
+                        extract=370,
+                        moisture=30,
+                        fermentability=100,
+                        metadata=GristMetadata(name='Sugar, Demerara'),
+                        mass=100),
+        ]
+        mash_liq = mash_liquor(grists, 2.5)
+        self.assertEqual(round(mash_liq, 1), 0.2)
+
+    def test_mash_liquor_withNoMashables(self):
+        grists = [GristRecipe(ebc=50,
+                              mashable=False,
+                              extract=370,
+                              moisture=30,
+                              fermentability=100,
+                              metadata=GristMetadata(name='Sugar, Demerara'),
+                              mass=100),
+                  ]
+        mash_liq = mash_liquor(grists, 2.5)
+        self.assertEqual(mash_liq, 0)
 
 
 if __name__ == '__main__':
