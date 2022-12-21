@@ -1,5 +1,6 @@
 import unittest
 
+from calc.abv import alcohol_by_volume_degrees
 from calc.final_gravity import final_gravity
 from calc.mash_liquor import mash_liquor
 from calc.util import total_mass, percentage_by_mass
@@ -225,6 +226,51 @@ class TestFinalGravity(unittest.TestCase):
         final_grav = final_gravity(grists, 10, 0.75, 0.62)
 
         self.assertEqual(round(final_grav, 1), 4.9)
+
+    def test_final_gravity_withLotsOfSugar(self):
+        grists = [
+            GristRecipe(ebc=60,
+                        mashable=True,
+                        extract=265,
+                        moisture=3,
+                        fermentability=None,
+                        metadata=GristMetadata(name='Amber Malt'),
+                        mass=1100),
+            GristRecipe(ebc=50,
+                        mashable=False,
+                        extract=370,
+                        moisture=30,
+                        fermentability=1,
+                        metadata=GristMetadata(name='Sugar, Demerara'),
+                        mass=6040),
+        ]
+        final_grav = final_gravity(grists, 10, 0.75, 0.62)
+
+        self.assertEqual(round(final_grav, 1), -45)
+
+
+class TestABV(unittest.TestCase):
+    def test_alcohol_by_volume_degrees_withLotsOfSugar(self):
+        grists = [
+            GristRecipe(ebc=60,
+                        mashable=True,
+                        extract=265,
+                        moisture=3,
+                        fermentability=None,
+                        metadata=GristMetadata(name='Amber Malt'),
+                        mass=1100),
+            GristRecipe(ebc=50,
+                        mashable=False,
+                        extract=370,
+                        moisture=30,
+                        fermentability=1,
+                        metadata=GristMetadata(name='Sugar, Demerara'),
+                        mass=6040),
+        ]
+        orig_grav = original_gravity(grists, 10, 0.75)
+        final_grav = final_gravity(grists, 10, 0.75, 0.62)
+        abv = alcohol_by_volume_degrees(orig_grav, final_grav)
+        self.assertEqual(round(abv, 1), 40.4)
 
 
 if __name__ == '__main__':
