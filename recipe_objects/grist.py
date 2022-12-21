@@ -24,12 +24,19 @@ class GristMetadata:
 
 @dataclasses.dataclass
 class Grist:
-    """Grain or Malt"""
+    """Grain or Malt
+
+
+    :param fermentability: The percentage of "how fermentable" the Grist is (i.e. 0.75 means 75%).
+                        If it is set to None, attenuation is used by default. In Graham's Beer Engine, he used a magic
+                        constant "200.0", and if it was 200, he applied attenuation calculations. This is the equivalent
+                        to that function.
+    """
     ebc: float
     mashable: bool
     extract: float
     moisture: float
-    fermentability: float
+    fermentability: Optional[float]
     metadata: Optional[GristMetadata] = None
 
 

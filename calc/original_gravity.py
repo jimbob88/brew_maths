@@ -4,7 +4,10 @@ from recipe_objects.grist import GristRecipe
 
 
 def original_gravity_points(grist: GristRecipe, efficiency: float = 0.75):
-    """Calculates the `points` for the original_gravity calc (alongside efficiency)"""
+    """Calculates the `points` for the original_gravity calc (alongside efficiency)
+
+    In Graham Wheeler's Home Brewing, this value is referred to as the `brewer's degrees`
+    """
     mass_kg = (grist.mass / 1000)
     return (grist.extract * mass_kg) * (efficiency if grist.mashable else 1)
 
@@ -15,10 +18,10 @@ def original_gravity(grists: List[GristRecipe], volume: float, efficiency: float
     :param grists: The grains used
     :param volume: The target volume in litres
     :param efficiency: Percentage efficiency (true extract vs experimental extract multiplier)
-    :return: The original gravity in 1000 form, i.e. 1046.1
+    :return: The original gravity in brewer's degrees
     """
     points = sum(original_gravity_points(grist, efficiency) for grist in grists)
-    return (points / volume) + 1000
+    return points / volume
 
 
 def individual_gravity(grist: GristRecipe, volume: float, efficiency: float = 0.75) -> float:

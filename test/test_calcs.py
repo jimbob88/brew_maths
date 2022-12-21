@@ -1,9 +1,10 @@
 import unittest
 
+from calc.final_gravity import final_gravity
 from calc.mash_liquor import mash_liquor
 from calc.util import total_mass, percentage_by_mass
 from calc.ebc import graham_recipe_ebc
-from calc.original_gravity import original_gravity, individual_gravity
+from calc.original_gravity import original_gravity, individual_gravity, original_gravity_points
 from recipe_objects.grist import GristRecipe, GristMetadata
 
 
@@ -39,13 +40,13 @@ class TestOriginalGravity(unittest.TestCase):
                         mashable=True,
                         extract=265,
                         moisture=3,
-                        fermentability=200,
+                        fermentability=None,
                         metadata=GristMetadata(name='Amber Malt'),
                         mass=100)
         ]
         grav = original_gravity(grists, 10, 0.75)
         # Test is in agreement with WWW
-        self.assertEqual(round(grav), 1002)
+        self.assertEqual(round(grav), 2)
 
     def test_original_gravity_withUnmashableSugar(self):
         grists = [
@@ -53,13 +54,13 @@ class TestOriginalGravity(unittest.TestCase):
                         mashable=False,
                         extract=370,
                         moisture=30,
-                        fermentability=100,
+                        fermentability=1,
                         metadata=GristMetadata(name='Sugar, Demerara'),
                         mass=100)
         ]
         grav = original_gravity(grists, 10, 0.75)
         # Test is in agreement with WWW
-        self.assertEqual(round(grav, 1), 1003.7)
+        self.assertEqual(round(grav, 1), 3.7)
 
     def test_original_gravity_withGrists(self):
         grists = [
@@ -67,20 +68,20 @@ class TestOriginalGravity(unittest.TestCase):
                         mashable=True,
                         extract=265,
                         moisture=3,
-                        fermentability=200,
+                        fermentability=None,
                         metadata=GristMetadata(name='Amber Malt'),
                         mass=100),
             GristRecipe(ebc=50,
                         mashable=False,
                         extract=370,
                         moisture=30,
-                        fermentability=100,
+                        fermentability=1,
                         metadata=GristMetadata(name='Sugar, Demerara'),
                         mass=100),
         ]
         grav = original_gravity(grists, 10, 0.75)
         # Test is in agreement with WWW
-        self.assertEqual(round(grav, 1), 1005.7)
+        self.assertEqual(round(grav, 1), 5.7)
 
     def test_original_gravity_withDifferentTargetVolume(self):
         grists = [
@@ -88,20 +89,20 @@ class TestOriginalGravity(unittest.TestCase):
                         mashable=True,
                         extract=265,
                         moisture=3,
-                        fermentability=200,
+                        fermentability=None,
                         metadata=GristMetadata(name='Amber Malt'),
                         mass=100),
             GristRecipe(ebc=50,
                         mashable=False,
                         extract=370,
                         moisture=30,
-                        fermentability=100,
+                        fermentability=1,
                         metadata=GristMetadata(name='Sugar, Demerara'),
                         mass=100),
         ]
         grav = original_gravity(grists, 30, 0.75)
         # Test is in agreement with WWW
-        self.assertEqual(round(grav, 1), 1001.9)
+        self.assertEqual(round(grav, 1), 1.9)
 
     def test_original_gravity_withDifferentEfficiency(self):
         grists = [
@@ -109,27 +110,27 @@ class TestOriginalGravity(unittest.TestCase):
                         mashable=True,
                         extract=265,
                         moisture=3,
-                        fermentability=200,
+                        fermentability=None,
                         metadata=GristMetadata(name='Amber Malt'),
                         mass=100),
             GristRecipe(ebc=50,
                         mashable=False,
                         extract=370,
                         moisture=30,
-                        fermentability=100,
+                        fermentability=1,
                         metadata=GristMetadata(name='Sugar, Demerara'),
                         mass=100),
         ]
         grav = original_gravity(grists, 10, 0.65)
         # Test is in agreement with WWW
-        self.assertEqual(round(grav, 1), 1005.4)
+        self.assertEqual(round(grav, 1), 5.4)
 
     def test_individual_gravity_withMashable(self):
         amber_malt = GristRecipe(ebc=60,
                                  mashable=True,
                                  extract=265,
                                  moisture=3,
-                                 fermentability=200,
+                                 fermentability=None,
                                  metadata=GristMetadata(name='Amber Malt'),
                                  mass=100)
         grav = individual_gravity(amber_malt, 10, 0.75)
@@ -140,7 +141,7 @@ class TestOriginalGravity(unittest.TestCase):
                             mashable=False,
                             extract=370,
                             moisture=30,
-                            fermentability=100,
+                            fermentability=1,
                             metadata=GristMetadata(name='Sugar, Demerara'),
                             mass=100)
         grav = individual_gravity(sugar, 10, 0.75)
@@ -154,14 +155,14 @@ class TestEBC(unittest.TestCase):
                         mashable=True,
                         extract=265,
                         moisture=3,
-                        fermentability=200,
+                        fermentability=None,
                         metadata=GristMetadata(name='Amber Malt'),
                         mass=100),
             GristRecipe(ebc=50,
                         mashable=False,
                         extract=370,
                         moisture=30,
-                        fermentability=100,
+                        fermentability=1,
                         metadata=GristMetadata(name='Sugar, Demerara'),
                         mass=100),
         ]
@@ -176,14 +177,14 @@ class TestMashLiqour(unittest.TestCase):
                         mashable=True,
                         extract=265,
                         moisture=3,
-                        fermentability=200,
+                        fermentability=None,
                         metadata=GristMetadata(name='Amber Malt'),
                         mass=100),
             GristRecipe(ebc=50,
                         mashable=False,
                         extract=370,
                         moisture=30,
-                        fermentability=100,
+                        fermentability=1,
                         metadata=GristMetadata(name='Sugar, Demerara'),
                         mass=100),
         ]
@@ -195,12 +196,35 @@ class TestMashLiqour(unittest.TestCase):
                               mashable=False,
                               extract=370,
                               moisture=30,
-                              fermentability=100,
+                              fermentability=1,
                               metadata=GristMetadata(name='Sugar, Demerara'),
                               mass=100),
                   ]
         mash_liq = mash_liquor(grists, 2.5)
         self.assertEqual(mash_liq, 0)
+
+
+class TestFinalGravity(unittest.TestCase):
+    def test_final_gravity(self):
+        grists = [
+            GristRecipe(ebc=60,
+                        mashable=True,
+                        extract=265,
+                        moisture=3,
+                        fermentability=None,
+                        metadata=GristMetadata(name='Amber Malt'),
+                        mass=1100),
+            GristRecipe(ebc=50,
+                        mashable=False,
+                        extract=370,
+                        moisture=30,
+                        fermentability=1,
+                        metadata=GristMetadata(name='Sugar, Demerara'),
+                        mass=40),
+        ]
+        final_grav = final_gravity(grists, 10, 0.75, 0.62)
+
+        self.assertEqual(round(final_grav, 1), 4.9)
 
 
 if __name__ == '__main__':
