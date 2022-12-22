@@ -1,7 +1,7 @@
 from typing import List
 
-from calc.util import total_mass_of_mashables
-from recipe_objects.grist import GristRecipe
+from brew_maths.calc.util import total_mass_of_mashables
+from brew_maths.recipe_objects.grist import GristRecipe
 
 
 def mash_liquor(grists: List[GristRecipe], lgr: float = 2.5) -> float:

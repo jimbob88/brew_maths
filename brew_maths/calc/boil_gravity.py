@@ -1,7 +1,7 @@
 from typing import List
 
-from calc.original_gravity import original_gravity
-from recipe_objects.grist import Grist, GristRecipe
+from brew_maths.calc.original_gravity import original_gravity
+from brew_maths.recipe_objects.grist import Grist, GristRecipe
 
 
 def boil_gravity(grists: List[GristRecipe], boil_volume: float, efficiency: float = 0.75):

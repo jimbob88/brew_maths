@@ -1,7 +1,7 @@
 from typing import Optional, List
 
-from calc.original_gravity import original_gravity_points
-from recipe_objects.grist import GristRecipe
+from brew_maths.calc.original_gravity import original_gravity_points
+from brew_maths.recipe_objects.grist import GristRecipe
 
 
 def apply_attenuation(fermentability: Optional[float], attenuation: float) -> float:

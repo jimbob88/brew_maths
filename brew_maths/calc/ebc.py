@@ -1,6 +1,6 @@
 from typing import List
 
-from recipe_objects.grist import GristRecipe
+from brew_maths.recipe_objects.grist import GristRecipe
 
 
 def graham_grist_ebc_in_solution(grist: GristRecipe, volume: float, efficiency: float = 0.75) -> float:

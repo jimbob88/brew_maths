@@ -1,6 +1,6 @@
 import math
 
-from recipe_objects.hop import HopRecipe
+from brew_maths.recipe_objects.hop import HopRecipe
 
 
 def utilization(hop: HopRecipe, boil_gravity: float):

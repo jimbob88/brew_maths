@@ -1,6 +1,6 @@
 from typing import List
 
-from recipe_objects.grist import GristRecipe
+from brew_maths.recipe_objects.grist import GristRecipe
 
 
 def total_mass(grists: List[GristRecipe]) -> float:

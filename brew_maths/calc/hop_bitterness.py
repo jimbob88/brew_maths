@@ -1,5 +1,5 @@
-from calc.hop_util import utilization
-from recipe_objects.hop import HopRecipe
+from brew_maths.calc.hop_util import utilization
+from brew_maths.recipe_objects.hop import HopRecipe
 
 
 def hop_ibu(hop: HopRecipe, volume: float, boil_gravity: float) -> float:
@@ -13,5 +13,5 @@ def hop_ibu(hop: HopRecipe, volume: float, boil_gravity: float) -> float:
     :return: IBUs of an individual hop
     """
     correction = 1 + (boil_gravity - 1.05) / 2 if boil_gravity > 1.050 else 1
-    
+
     return (hop.mass * hop.alpha * utilization(hop, boil_gravity) * 1000) / (volume * correction)

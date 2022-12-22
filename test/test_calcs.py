@@ -1,15 +1,18 @@
+"""
+A set of tests and documentation for the calculations available
+"""
 import unittest
 
-from calc.abv import www_alcohol_by_volume_degrees
-from calc.final_gravity import final_gravity
-from calc.hop_bitterness import hop_ibu
-from calc.hop_util import utilization
-from calc.mash_liquor import mash_liquor
-from calc.util import total_mass, percentage_by_mass
-from calc.ebc import graham_recipe_ebc
-from calc.original_gravity import original_gravity, individual_gravity
-from recipe_objects.grist import GristRecipe, GristMetadata
-from recipe_objects.hop import HopRecipe, HopMetadata
+from brew_maths.calc.abv import www_alcohol_by_volume_degrees
+from brew_maths.calc.final_gravity import final_gravity
+from brew_maths.calc.hop_bitterness import hop_ibu
+from brew_maths.calc.hop_util import utilization
+from brew_maths.calc.mash_liquor import mash_liquor
+from brew_maths.calc.util import total_mass, percentage_by_mass
+from brew_maths.calc.ebc import graham_recipe_ebc
+from brew_maths.calc.original_gravity import original_gravity, individual_gravity
+from brew_maths.recipe_objects.grist import GristRecipe, GristMetadata
+from brew_maths.recipe_objects.hop import HopRecipe, HopMetadata
 
 
 class TestMisc(unittest.TestCase):
