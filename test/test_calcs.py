@@ -2,11 +2,14 @@ import unittest
 
 from calc.abv import www_alcohol_by_volume_degrees
 from calc.final_gravity import final_gravity
+from calc.hop_bitterness import hop_ibu
+from calc.hop_util import utilization
 from calc.mash_liquor import mash_liquor
 from calc.util import total_mass, percentage_by_mass
 from calc.ebc import graham_recipe_ebc
-from calc.original_gravity import original_gravity, individual_gravity, original_gravity_points
+from calc.original_gravity import original_gravity, individual_gravity
 from recipe_objects.grist import GristRecipe, GristMetadata
+from recipe_objects.hop import HopRecipe, HopMetadata
 
 
 class TestMisc(unittest.TestCase):
@@ -19,7 +22,7 @@ class TestMisc(unittest.TestCase):
                 0, False, 0, 0, 0, None, 300
             ),
         ]
-        self.assertEqual(total_mass(grists), 400)
+        self.assertEqual(400, total_mass(grists))
 
     def test_percentage_by_mass(self):
         grists = [
@@ -30,8 +33,8 @@ class TestMisc(unittest.TestCase):
                 0, False, 0, 0, 0, None, 300
             ),
         ]
-        self.assertEqual(total_mass(grists), 400)
-        self.assertEqual(percentage_by_mass(grists[0], grists), 0.25)
+        self.assertEqual(400, total_mass(grists))
+        self.assertEqual(0.25, percentage_by_mass(grists[0], grists))
 
 
 class TestOriginalGravity(unittest.TestCase):
@@ -47,7 +50,7 @@ class TestOriginalGravity(unittest.TestCase):
         ]
         grav = original_gravity(grists, 10, 0.75)
         # Test is in agreement with WWW
-        self.assertEqual(round(grav), 2)
+        self.assertEqual(2, round(grav))
 
     def test_original_gravity_withUnmashableSugar(self):
         grists = [
@@ -61,7 +64,7 @@ class TestOriginalGravity(unittest.TestCase):
         ]
         grav = original_gravity(grists, 10, 0.75)
         # Test is in agreement with WWW
-        self.assertEqual(round(grav, 1), 3.7)
+        self.assertEqual(3.7, round(grav, 1))
 
     def test_original_gravity_withGrists(self):
         grists = [
@@ -82,7 +85,7 @@ class TestOriginalGravity(unittest.TestCase):
         ]
         grav = original_gravity(grists, 10, 0.75)
         # Test is in agreement with WWW
-        self.assertEqual(round(grav, 1), 5.7)
+        self.assertEqual(5.7, round(grav, 1))
 
     def test_original_gravity_withDifferentTargetVolume(self):
         grists = [
@@ -103,7 +106,7 @@ class TestOriginalGravity(unittest.TestCase):
         ]
         grav = original_gravity(grists, 30, 0.75)
         # Test is in agreement with WWW
-        self.assertEqual(round(grav, 1), 1.9)
+        self.assertEqual(1.9, round(grav, 1))
 
     def test_original_gravity_withDifferentEfficiency(self):
         grists = [
@@ -124,7 +127,7 @@ class TestOriginalGravity(unittest.TestCase):
         ]
         grav = original_gravity(grists, 10, 0.65)
         # Test is in agreement with WWW
-        self.assertEqual(round(grav, 1), 5.4)
+        self.assertEqual(5.4, round(grav, 1))
 
     def test_individual_gravity_withMashable(self):
         amber_malt = GristRecipe(ebc=60,
@@ -135,7 +138,7 @@ class TestOriginalGravity(unittest.TestCase):
                                  metadata=GristMetadata(name='Amber Malt'),
                                  mass=100)
         grav = individual_gravity(amber_malt, 10, 0.75)
-        self.assertEqual(round(grav, 1), 2.0)
+        self.assertEqual(2.0, round(grav, 1))
 
     def test_individual_gravity_withNonMashable(self):
         sugar = GristRecipe(ebc=50,
@@ -146,7 +149,7 @@ class TestOriginalGravity(unittest.TestCase):
                             metadata=GristMetadata(name='Sugar, Demerara'),
                             mass=100)
         grav = individual_gravity(sugar, 10, 0.75)
-        self.assertEqual(round(grav, 1), 3.7)
+        self.assertEqual(3.7, round(grav, 1))
 
 
 class TestEBC(unittest.TestCase):
@@ -168,7 +171,7 @@ class TestEBC(unittest.TestCase):
                         mass=100),
         ]
         ebc = graham_recipe_ebc(grists, 10, 0.75)
-        self.assertEqual(round(ebc, 1), 9.5)
+        self.assertEqual(9.5, round(ebc, 1))
 
 
 class TestMashLiqour(unittest.TestCase):
@@ -190,7 +193,7 @@ class TestMashLiqour(unittest.TestCase):
                         mass=100),
         ]
         mash_liq = mash_liquor(grists, 2.5)
-        self.assertEqual(round(mash_liq, 1), 0.2)
+        self.assertEqual(0.2, round(mash_liq, 1))
 
     def test_mash_liquor_withNoMashables(self):
         grists = [GristRecipe(ebc=50,
@@ -202,7 +205,7 @@ class TestMashLiqour(unittest.TestCase):
                               mass=100),
                   ]
         mash_liq = mash_liquor(grists, 2.5)
-        self.assertEqual(mash_liq, 0)
+        self.assertEqual(0, mash_liq)
 
 
 class TestFinalGravity(unittest.TestCase):
@@ -225,7 +228,7 @@ class TestFinalGravity(unittest.TestCase):
         ]
         final_grav = final_gravity(grists, 10, 0.75, 0.62)
 
-        self.assertEqual(round(final_grav, 1), 4.9)
+        self.assertEqual(4.9, round(final_grav, 1))
 
     def test_final_gravity_withLotsOfSugar(self):
         grists = [
@@ -246,7 +249,7 @@ class TestFinalGravity(unittest.TestCase):
         ]
         final_grav = final_gravity(grists, 10, 0.75, 0.62)
 
-        self.assertEqual(round(final_grav, 1), -45)
+        self.assertEqual(-45, round(final_grav, 1))
 
 
 class TestABV(unittest.TestCase):
@@ -270,7 +273,45 @@ class TestABV(unittest.TestCase):
         orig_grav = original_gravity(grists, 10, 0.75)
         final_grav = final_gravity(grists, 10, 0.75, 0.62)
         abv = www_alcohol_by_volume_degrees(orig_grav, final_grav)
-        self.assertEqual(round(abv, 1), 40.4)
+        self.assertEqual(40.4, round(abv, 1))
+
+
+class TestIBU(unittest.TestCase):
+    def test_hop_ibu(self):
+        hop = HopRecipe(
+            alpha=0.076,  # 7.6%
+            metadata=HopMetadata(name='Challenger'),
+            mass=100,
+            time=90
+        )
+        ibu = hop_ibu(hop, 23, 1.000)
+        # In agreement with Beer Engine
+        self.assertEqual(128, round(ibu))
+
+    def test_hop_ibu_withCorrection(self):
+        hop = HopRecipe(
+            alpha=0.076,  # 7.6%
+            metadata=HopMetadata(name='Challenger'),
+            mass=100,
+            time=90
+        )
+        # gravity > 1.050 will add correction
+        ibu = hop_ibu(hop, 23, 1.055)
+        # In agreement with Beer Engine
+        self.assertEqual(78, round(ibu))
+
+
+class TestHopUtil(unittest.TestCase):
+    def test_util(self):
+        hop = HopRecipe(
+            alpha=0.076,  # 7.6%
+            metadata=HopMetadata(name='Challenger'),
+            mass=100,
+            time=90
+        )
+        ut = utilization(hop, 1.055)
+        # agrees ~ with Beer Engine
+        self.assertEqual(0.236, round(ut, 3))
 
 
 if __name__ == '__main__':
