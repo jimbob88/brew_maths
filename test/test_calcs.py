@@ -1,6 +1,6 @@
 import unittest
 
-from calc.abv import alcohol_by_volume_degrees
+from calc.abv import www_alcohol_by_volume_degrees
 from calc.final_gravity import final_gravity
 from calc.mash_liquor import mash_liquor
 from calc.util import total_mass, percentage_by_mass
@@ -269,7 +269,7 @@ class TestABV(unittest.TestCase):
         ]
         orig_grav = original_gravity(grists, 10, 0.75)
         final_grav = final_gravity(grists, 10, 0.75, 0.62)
-        abv = alcohol_by_volume_degrees(orig_grav, final_grav)
+        abv = www_alcohol_by_volume_degrees(orig_grav, final_grav)
         self.assertEqual(round(abv, 1), 40.4)
 
 
